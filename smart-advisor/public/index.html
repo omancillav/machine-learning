@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asesor Financiero ENSAFI</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --accent: #3498db;
+      --bg: #ecf0f1;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 20px;
+      max-width: 900px;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    /* Estilos del Formulario */
+    .card-form {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      flex: 1;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-top: 0;
+      font-size: 1.4rem;
+      border-bottom: 2px solid var(--bg);
+      padding-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #999;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #34495e;
+      transform: translateY(-2px);
+    }
+
+    /* Estilos de la Respuesta */
+    .card-result {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      flex: 1.5;
+      display: none;
+      overflow: hidden;
+    }
+
+    .result-header {
+      background: var(--accent);
+      color: white;
+      padding: 20px;
+    }
+
+    .result-header h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .result-body {
+      padding: 25px;
+    }
+
+    .diagnostico-box {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      color: #856404;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .action-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .action-list li {
+      background: #f8f9fa;
+      margin-bottom: 10px;
+      padding: 12px 15px;
+      border-radius: 6px;
+      border-left: 4px solid var(--accent);
+      display: flex;
+      align-items: center;
+    }
+
+    .action-list li:before {
+      content: "✅";
+      margin-right: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-container">
+    <div class="card-form">
+      <h2>📊 Tus Datos Financieros</h2>
+      <p style="font-size:0.85rem; color:#666;">Completa todos los campos. La IA necesita tu perfil completo para
+        diagnosticar.</p>
+
+      <form id="advisorForm">
+        <label>Edad del Jefe de Hogar</label>
+        <span class="hint">Importante para determinar horizonte de riesgo.</span>
+        <input type="number" id="edad" placeholder="Ej. 35" min="18" max="99" required>
+
+        <label>Ingreso Mensual del Hogar ($)</label>
+        <span class="hint">Suma de todos los sueldos netos.</span>
+        <input type="number" id="ingreso" placeholder="Ej. 18000" min="1" required>
+
+        <label>Deuda Total Actual ($)</label>
+        <span class="hint">Tarjetas, préstamos, nómina (sin hipoteca).</span>
+        <input type="number" id="deuda" placeholder="Ej. 5000" min="0" required>
+
+        <label>Región Geográfica</label>
+        <span class="hint">El costo de vida varía por zona.</span>
+        <select id="region">
+          <option value="1">Norte</option>
+          <option value="2">Sur</option>
+          <option value="3">Centro</option>
+          <option value="4">Bajío / Occidente</option>
+        </select>
+
+        <label style="display: flex; align-items: center; gap: 10px; margin-top: 20px; cursor: pointer;">
+          <input type="checkbox" id="seguridad" style="width: 20px;">
+          <span>Cuento con Seguridad Social (IMSS/ISSSTE)</span>
+        </label>
+
+        <button type="submit">Generar Estrategia IA</button>
+      </form>
+    </div>
+
+    <div id="resultado" class="card-result">
+      <div class="result-header">
+        <span class="badge">IA Confidence: <span id="confianza"></span>%</span>
+        <h3 id="planTitulo">...</h3>
+      </div>
+
+      <div class="result-body">
+        <div class="diagnostico-box">
+          <strong> Diagnóstico Personalizado:</strong><br>
+          <span id="diagnosticoTexto"></span>
+        </div>
+
+        <p style="font-weight: bold; color: var(--primary);">Descripción:</p>
+        <p id="planDescripcion" style="color: #555; line-height: 1.5;"></p>
+
+        <p style="font-weight: bold; color: var(--primary); margin-top: 25px;">📋 Pasos de Acción Inmediata:</p>
+        <ul id="listaAcciones" class="action-list">
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('advisorForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = document.querySelector('button');
+      btn.innerText = "Analizando patrones...";
+      btn.disabled = true;
+
+      const payload = {
+        edad: document.getElementById('edad').value,
+        ingreso: document.getElementById('ingreso').value,
+        deuda: document.getElementById('deuda').value,
+        region: document.getElementById('region').value,
+        seguridad_social: document.getElementById('seguridad').checked ? 1 : 0
+      };
+
+      try {
+        const res = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          alert(data.error);
+        } else {
+          // Mostrar tarjeta
+          const resultCard = document.getElementById('resultado');
+          resultCard.style.display = 'block';
+          resultCard.scrollIntoView({ behavior: 'smooth' });
+
+          // Llenar datos
+          document.getElementById('planTitulo').innerText = data.titulo;
+          document.getElementById('confianza').innerText = data.confianza;
+          document.getElementById('diagnosticoTexto').innerText = data.diagnostico_personalizado;
+          document.getElementById('planDescripcion').innerText = data.descripcion;
+
+          // Llenar lista de acciones dinámicamente
+          const lista = document.getElementById('listaAcciones');
+          lista.innerHTML = ''; // Limpiar anterior
+          data.acciones.forEach(accion => {
+            const li = document.createElement('li');
+            li.innerText = accion;
+            lista.appendChild(li);
+          });
+
+          // Cambiar color del header según el plan (Visual feedback)
+          const header = document.querySelector('.result-header');
+          if (data.titulo.includes("Consolidación")) header.style.background = "#e74c3c"; // Rojo
+          else if (data.titulo.includes("Austeridad")) header.style.background = "#f39c12"; // Naranja
+          else if (data.titulo.includes("Inversión")) header.style.background = "#27ae60"; // Verde
+          else header.style.background = "#3498db"; // Azul
+        }
+      } catch (err) {
+        alert("Error de conexión con el servidor IA");
+      } finally {
+        btn.innerText = "Generar Estrategia IA";
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+
+</html>
