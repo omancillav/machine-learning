@@ -336,15 +336,25 @@
   <script>
     document.getElementById('advisorForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Validaciones
+      const edadVal = parseFloat(document.getElementById('edad').value);
+      const ingresoVal = parseFloat(document.getElementById('ingreso').value);
+      const deudaVal = parseFloat(document.getElementById('deuda').value);
+
+      if (edadVal < 18 || edadVal > 99) return alert("La edad debe estar entre 18 y 99 años.");
+      if (ingresoVal < 0) return alert("El ingreso no puede ser negativo.");
+      if (deudaVal < 0) return alert("La deuda no puede ser negativa.");
+
       const btn = document.querySelector('button');
       const originalText = btn.innerText;
       btn.innerText = "Analizando...";
       btn.disabled = true;
 
       const payload = {
-        edad: document.getElementById('edad').value,
-        ingreso: document.getElementById('ingreso').value,
-        deuda: document.getElementById('deuda').value,
+        edad: edadVal,
+        ingreso: ingresoVal,
+        deuda: deudaVal,
         region: document.getElementById('region').value,
         seguridad_social: document.getElementById('seguridad').checked ? 1 : 0
       };

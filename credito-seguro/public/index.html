@@ -210,11 +210,11 @@
       <form id="creditForm">
         <div class="form-group">
           <label>Ingreso Mensual ($)</label>
-          <input type="number" id="ingreso" required placeholder="Ej. 15000">
+          <input type="number" id="ingreso" required placeholder="Ej. 15000" min="0">
         </div>
         <div class="form-group">
           <label>Deuda Total ($)</label>
-          <input type="number" id="deuda" required placeholder="Ej. 5000">
+          <input type="number" id="deuda" required placeholder="Ej. 5000" min="0">
         </div>
         <div class="form-group">
           <label>Edad</label>
@@ -222,7 +222,7 @@
         </div>
         <div class="form-group">
           <label>Dependientes</label>
-          <input type="number" id="dependientes" required placeholder="Ej. 2">
+          <input type="number" id="dependientes" required placeholder="Ej. 2" min="0">
         </div>
         <button type="submit">Calcular Límite</button>
       </form>
@@ -238,16 +238,28 @@
   <script>
     document.getElementById('creditForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Validaciones
+      const ingresoVal = parseFloat(document.getElementById('ingreso').value);
+      const deudaVal = parseFloat(document.getElementById('deuda').value);
+      const edadVal = parseFloat(document.getElementById('edad').value);
+      const dependientesVal = parseFloat(document.getElementById('dependientes').value);
+
+      if (ingresoVal < 0) return alert("El ingreso no puede ser negativo.");
+      if (deudaVal < 0) return alert("La deuda no puede ser negativa.");
+      if (edadVal < 18 || edadVal > 99) return alert("La edad debe estar entre 18 y 99 años.");
+      if (dependientesVal < 0) return alert("El número de dependientes no puede ser negativo.");
+
       const btn = e.target.querySelector('button');
       const originalText = btn.innerText;
       btn.innerText = "Calculando...";
       btn.disabled = true;
 
       const data = {
-        ingreso: document.getElementById('ingreso').value,
-        deuda: document.getElementById('deuda').value,
-        edad: document.getElementById('edad').value,
-        dependientes: document.getElementById('dependientes').value
+        ingreso: ingresoVal,
+        deuda: deudaVal,
+        edad: edadVal,
+        dependientes: dependientesVal
       };
 
       try {

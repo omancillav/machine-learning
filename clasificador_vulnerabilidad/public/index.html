@@ -226,19 +226,19 @@
         <div class="form-grid">
           <div>
             <label>Ingreso Mensual ($)</label>
-            <input type="number" id="ingreso" required placeholder="Ej. 12000">
+            <input type="number" id="ingreso" required placeholder="Ej. 12000" min="0">
           </div>
           <div>
             <label>Deuda Total ($)</label>
-            <input type="number" id="deuda" required placeholder="Ej. 50000">
+            <input type="number" id="deuda" required placeholder="Ej. 50000" min="0">
           </div>
           <div>
             <label>Edad</label>
-            <input type="number" id="edad" required placeholder="Ej. 45">
+            <input type="number" id="edad" required placeholder="Ej. 45" min="18" max="99">
           </div>
           <div>
             <label>Dependientes</label>
-            <input type="number" id="dependientes" required placeholder="Ej. 3">
+            <input type="number" id="dependientes" required placeholder="Ej. 3" min="0">
           </div>
         </div>
 
@@ -252,16 +252,28 @@
   <script>
     document.getElementById('vulnerabilidadForm').addEventListener('submit', function (e) {
       e.preventDefault();
+
+      // Validaciones
+      const ingresoVal = parseFloat(document.getElementById('ingreso').value);
+      const deudaVal = parseFloat(document.getElementById('deuda').value);
+      const edadVal = parseFloat(document.getElementById('edad').value);
+      const dependientesVal = parseFloat(document.getElementById('dependientes').value);
+
+      if (ingresoVal < 0) return alert("El ingreso no puede ser negativo.");
+      if (deudaVal < 0) return alert("La deuda no puede ser negativa.");
+      if (edadVal < 18 || edadVal > 99) return alert("La edad debe estar entre 18 y 99 años.");
+      if (dependientesVal < 0) return alert("El número de dependientes no puede ser negativo.");
+
       const btn = e.target.querySelector('button');
       const originalText = btn.innerText;
       btn.innerText = "Procesando...";
       btn.disabled = true;
 
       const data = {
-        ingreso: document.getElementById('ingreso').value,
-        deuda: document.getElementById('deuda').value,
-        edad: document.getElementById('edad').value,
-        dependientes: document.getElementById('dependientes').value
+        ingreso: ingresoVal,
+        deuda: deudaVal,
+        edad: edadVal,
+        dependientes: dependientesVal
       };
 
       const resultadoDiv = document.getElementById('resultado');
