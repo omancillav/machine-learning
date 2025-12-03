@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asesor de Soluciones Financieras</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .main-card {
+      background: white;
+      width: 800px;
+      border-radius: 20px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Columna Izquierda (Formulario) */
+    .left-col {
+      width: 40%;
+      padding: 40px;
+      background: #fff;
+    }
+
+    .left-col h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    /* Columna Derecha (Resultado) */
+    .right-col {
+      width: 60%;
+      padding: 40px;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-left: 1px solid #eee;
+    }
+
+    #placeholder-img {
+      width: 150px;
+      opacity: 0.3;
+      margin-bottom: 20px;
+    }
+
+    /* Estilos de Planes */
+    .plan-box {
+      display: none;
+      padding: 30px;
+      border-radius: 15px;
+      color: white;
+      animation: fadeIn 0.5s;
+    }
+
+    .success {
+      background: linear-gradient(to right, #11998e, #38ef7d);
+    }
+
+    .warning {
+      background: linear-gradient(to right, #f2994a, #f2c94c);
+      color: #333 !important;
+    }
+
+    .danger {
+      background: linear-gradient(to right, #cb2d3e, #ef473a);
+    }
+
+    .plan-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .plan-desc {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .confidence {
+      margin-top: 20px;
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-card">
+    <div class="left-col">
+      <h2>Tu Perfil</h2>
+      <form id="strategyForm">
+        <label>Ingreso Mensual Total ($)</label>
+        <input type="number" id="ingreso" required placeholder="Ej. 20000">
+
+        <label>Deuda Total Acumulada ($)</label>
+        <input type="number" id="deuda" required placeholder="Ej. 50000">
+
+        <label>Personas Dependientes</label>
+        <input type="number" id="dependientes" required placeholder="Hijos, padres...">
+
+        <label>Situación de Vivienda</label>
+        <select id="tenencia">
+          <option value="0">Rentada / Prestada</option>
+          <option value="1">Propia / Pagándola</option>
+        </select>
+
+        <button type="submit">Generar Estrategia</button>
+      </form>
+    </div>
+
+    <div class="right-col" id="result-container">
+      <div id="initial-state">
+        <h3 style="color:#aaa;">La IA analizará tu situación...</h3>
+        <p style="color:#ccc;">Completa el formulario para recibir un plan de acción personalizado.</p>
+      </div>
+
+      <div id="plan-card" class="plan-box">
+        <span class="plan-title" id="p-title"></span>
+        <span class="plan-desc" id="p-desc"></span>
+        <span class="confidence" id="p-conf"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('strategyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Efecto de carga
+      const btn = e.target.querySelector('button');
+      btn.innerText = "Procesando...";
+      btn.disabled = true;
+
+      const data = {
+        ingreso: document.getElementById('ingreso').value,
+        deuda: document.getElementById('deuda').value,
+        dependientes: document.getElementById('dependientes').value,
+        tenencia: document.getElementById('tenencia').value
+      };
+
+      try {
+        const res = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+
+        // Ocultar placeholder y mostrar resultado
+        document.getElementById('initial-state').style.display = 'none';
+        const card = document.getElementById('plan-card');
+
+        // Asignar datos
+        document.getElementById('p-title').innerText = json.plan.titulo;
+        document.getElementById('p-desc').innerText = json.plan.descripcion;
+        document.getElementById('p-conf').innerText = `Confianza del análisis: ${json.certeza}%`;
+
+        // Asignar color (clase CSS)
+        card.className = `plan-box ${json.plan.color}`;
+        card.style.display = 'block';
+
+      } catch (error) {
+        console.error(error);
+        alert("Error en el servidor de IA");
+      }
+
+      btn.innerText = "Generar Estrategia";
+      btn.disabled = false;
+    });
+  </script>
+
+</body>
+
+</html>
