@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const advisor = require("./advisor_model");
 
 const app = express();
-const port = 3000;
+const port = 3003;
 
 app.use(bodyParser.json());
 app.use(express.static("public"));

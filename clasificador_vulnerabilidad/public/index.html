@@ -4,121 +4,259 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evaluación de Vulnerabilidad Financiera</title>
+  <title>Evaluación de Riesgo - Suite Financiera</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --sidebar-bg: #1e293b;
+      --sidebar-text: #94a3b8;
+      --sidebar-active: #3b82f6;
+      --sidebar-active-bg: #1e293b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --primary: #3b82f6;
+      --accent: #f59e0b;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
       margin: 0;
-      padding: 20px;
-      background-color: #f4f4f9;
-      color: #333;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    h1 {
-      color: #23007B;
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: var(--sidebar-bg);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Color similar al de tu práctica anterior */
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo i {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav-links li {
+      margin-bottom: 10px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--sidebar-text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
       border-radius: 8px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    .nav-links a.active {
+      border-left: 4px solid var(--primary);
+      padding-left: 11px;
+      /* Adjust for border */
+    }
+
+    .nav-links i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: var(--text-main);
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     label {
       display: block;
-      margin: 15px 0 5px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.9rem;
     }
 
-    input[type="number"] {
-      width: 95%;
+    input {
+      width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     button {
-      margin-top: 20px;
       width: 100%;
       padding: 12px;
-      background-color: #28a745;
-      color: #fff;
+      background-color: var(--primary);
+      color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 16px;
+      margin-top: 20px;
+      transition: background 0.2s;
     }
 
     button:hover {
-      background-color: #218838;
+      background-color: #2563eb;
     }
 
     #resultado {
-      margin-top: 25px;
+      margin-top: 20px;
       padding: 15px;
-      border-radius: 4px;
+      border-radius: 8px;
       text-align: center;
-      font-size: 1.2em;
+      font-weight: 600;
       display: none;
-      /* Oculto por defecto */
     }
 
     .ESTABLE {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
     }
 
-    .EN.RIESGO {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
+    .EN {
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #fde047;
     }
 
+    /* Handles "EN RIESGO" */
     .CRÍTICO {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
-    <h1>Vulnerabilidad Financiera Familiar</h1>
-    <p>Evalúa el riesgo de endeudamiento de tu hogar mediante IA. Ingresa los datos para un diagnóstico instantáneo.</p>
+  <div class="sidebar">
+    <div class="logo">
+      <i class="fas fa-chart-pie"></i>
+      FinSuite AI
+    </div>
+    <ul class="nav-links">
+      <li><a href="http://localhost:3001" class="active"><i class="fas fa-shield-alt"></i> Riesgo Financiero</a></li>
+      <li><a href="http://localhost:3002"><i class="fas fa-credit-card"></i> Límite de Crédito</a></li>
+      <li><a href="http://localhost:3003"><i class="fas fa-user-tie"></i> Asesor Inteligente</a></li>
+    </ul>
+  </div>
 
+  <div class="main-content">
+    <div class="header">
+      <h1>Evaluación de Vulnerabilidad</h1>
+    </div>
 
+    <div class="card">
+      <p style="color: #64748b; margin: 0 0 25px 0;">Analiza el nivel de riesgo de endeudamiento del hogar basado en
+        ingresos y demografía.</p>
 
-    <form id="vulnerabilidadForm">
-      <label for="ingreso">Ingreso Mensual ($):</label>
-      <input type="number" id="ingreso" name="ingreso" placeholder="Ej. 12000" required>
+      <form id="vulnerabilidadForm">
+        <div class="form-grid">
+          <div>
+            <label>Ingreso Mensual ($)</label>
+            <input type="number" id="ingreso" required placeholder="Ej. 12000">
+          </div>
+          <div>
+            <label>Deuda Total ($)</label>
+            <input type="number" id="deuda" required placeholder="Ej. 50000">
+          </div>
+          <div>
+            <label>Edad</label>
+            <input type="number" id="edad" required placeholder="Ej. 45">
+          </div>
+          <div>
+            <label>Dependientes</label>
+            <input type="number" id="dependientes" required placeholder="Ej. 3">
+          </div>
+        </div>
 
-      <label for="deuda">Deuda Total Acumulada ($):</label>
-      <input type="number" id="deuda" name="deuda" placeholder="Ej. 50000" required>
+        <button type="submit">Calcular Nivel de Riesgo</button>
+      </form>
 
-      <label for="edad">Edad del Jefe de Familia:</label>
-      <input type="number" id="edad" name="edad" placeholder="Ej. 45" required>
-
-      <label for="dependientes">Número de Dependientes:</label>
-      <input type="number" id="dependientes" name="dependientes" placeholder="Ej. 3" required>
-
-      <button type="submit">Calcular Riesgo</button>
-    </form>
-
-    <div id="resultado"></div>
+      <div id="resultado"></div>
+    </div>
   </div>
 
   <script>
     document.getElementById('vulnerabilidadForm').addEventListener('submit', function (e) {
       e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const originalText = btn.innerText;
+      btn.innerText = "Procesando...";
+      btn.disabled = true;
 
-      // Recopilar datos
       const data = {
         ingreso: document.getElementById('ingreso').value,
         deuda: document.getElementById('deuda').value,
@@ -127,35 +265,36 @@
       };
 
       const resultadoDiv = document.getElementById('resultado');
-      resultadoDiv.style.display = 'block';
+      resultadoDiv.style.display = 'none';
       resultadoDiv.className = '';
-      resultadoDiv.innerHTML = 'Procesando con TensorFlow...';
 
-      // Enviar al servidor
       fetch('/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(result => {
+          resultadoDiv.style.display = 'block';
           if (result.error) {
             resultadoDiv.innerText = result.error;
+            resultadoDiv.style.color = 'red';
           } else {
-            // Mostrar resultado con estilo dinámico
-            resultadoDiv.className = result.nivel; // Aplica la clase CSS según el nivel
-            resultadoDiv.innerHTML = `
-                    <strong>Nivel Detectado: ${result.nivel}</strong><br>
-                `;
+            resultadoDiv.className = result.nivel.split(' ')[0]; // Take first word for class
+            resultadoDiv.innerHTML = `DIAGNÓSTICO: <span style="font-size: 1.2em">${result.nivel}</span>`;
           }
         })
         .catch(err => {
           console.error(err);
-          resultadoDiv.innerText = "Error al conectar con el servidor.";
+          resultadoDiv.style.display = 'block';
+          resultadoDiv.innerText = "Error de conexión.";
+        })
+        .finally(() => {
+          btn.innerText = originalText;
+          btn.disabled = false;
         });
     });
   </script>
-
 </body>
 
 </html>

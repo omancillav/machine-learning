@@ -4,128 +4,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Límites de Crédito (AI)</title>
+  <title>Límite de Crédito - Suite Financiera</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --sidebar-bg: #1e293b;
+      --sidebar-text: #94a3b8;
+      --sidebar-active: #3b82f6;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --primary: #3b82f6;
+      --success: #10b981;
+    }
+
     body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background-color: #eef2f5;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      margin: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: var(--sidebar-bg);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo i {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav-links li {
+      margin-bottom: 10px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--sidebar-text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    .nav-links a.active {
+      border-left: 4px solid var(--primary);
+      padding-left: 11px;
+    }
+
+    .nav-links i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: var(--text-main);
+      font-size: 1.8rem;
       margin: 0;
     }
 
     .card {
-      background: white;
-      padding: 2rem;
+      background: var(--card-bg);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      width: 400px;
-    }
-
-    h2 {
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 1.5rem;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
     }
 
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 15px;
     }
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      color: #555;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-main);
       font-size: 0.9rem;
     }
 
     input {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #e2e8f0;
       border-radius: 6px;
       box-sizing: border-box;
-      /* Para que el padding no rompa el ancho */
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     button {
       width: 100%;
       padding: 12px;
-      background-color: #3498db;
+      background-color: var(--primary);
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      margin-top: 10px;
+      transition: background 0.2s;
     }
 
     button:hover {
-      background-color: #2980b9;
+      background-color: #2563eb;
     }
 
     #result-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background-color: #f8f9fa;
-      border-radius: 6px;
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #f8fafc;
+      border-radius: 8px;
       text-align: center;
+      border: 1px solid #e2e8f0;
       display: none;
-      border-left: 5px solid #3498db;
     }
 
     .amount {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #27ae60;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--success);
       display: block;
-      margin-top: 5px;
+      margin: 10px 0;
     }
 
-    .info {
-      font-size: 0.8rem;
-      color: #7f8c8d;
+    .currency {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>Pre-Aprobación de Crédito</h2>
-    <form id="creditForm">
-      <div class="form-group">
-        <label>Ingreso Mensual del Hogar ($)</label>
-        <input type="number" id="ingreso" required placeholder="Ej. 15000">
-      </div>
-      <div class="form-group">
-        <label>Deuda Total Actual ($)</label>
-        <input type="number" id="deuda" required placeholder="Ej. 5000">
-      </div>
-      <div class="form-group">
-        <label>Edad del Solicitante</label>
-        <input type="number" id="edad" required placeholder="Ej. 30" min="18" max="99">
-      </div>
-      <div class="form-group">
-        <label>Número de Dependientes</label>
-        <input type="number" id="dependientes" required placeholder="Ej. 2">
-      </div>
-      <button type="submit">Calcular Límite Seguro</button>
-    </form>
+  <div class="sidebar">
+    <div class="logo">
+      <i class="fas fa-chart-pie"></i>
+      FinSuite AI
+    </div>
+    <ul class="nav-links">
+      <li><a href="http://localhost:3001"><i class="fas fa-shield-alt"></i> Riesgo Financiero</a></li>
+      <li><a href="http://localhost:3002" class="active"><i class="fas fa-credit-card"></i> Límite de Crédito</a></li>
+      <li><a href="http://localhost:3003"><i class="fas fa-user-tie"></i> Asesor Inteligente</a></li>
+    </ul>
+  </div>
 
-    <div id="result-box">
-      <span class="info">Límite Sugerido por IA:</span>
-      <span class="amount" id="monto-output">$0.00</span>
-      <span class="info">MXN Mensuales</span>
+  <div class="main-content">
+    <div class="header">
+      <h1>Calculadora de Crédito</h1>
+    </div>
+
+    <div class="card">
+      <p style="color: #64748b; margin: 0 0 25px 0;">Predicción de límite seguro usando Regresión Lineal.</p>
+
+      <form id="creditForm">
+        <div class="form-group">
+          <label>Ingreso Mensual ($)</label>
+          <input type="number" id="ingreso" required placeholder="Ej. 15000">
+        </div>
+        <div class="form-group">
+          <label>Deuda Total ($)</label>
+          <input type="number" id="deuda" required placeholder="Ej. 5000">
+        </div>
+        <div class="form-group">
+          <label>Edad</label>
+          <input type="number" id="edad" required placeholder="Ej. 30" min="18" max="99">
+        </div>
+        <div class="form-group">
+          <label>Dependientes</label>
+          <input type="number" id="dependientes" required placeholder="Ej. 2">
+        </div>
+        <button type="submit">Calcular Límite</button>
+      </form>
+
+      <div id="result-box">
+        <span style="color: #64748b; font-size: 0.9rem;">Límite Sugerido Mensual</span>
+        <span class="amount" id="monto-output">$0.00</span>
+        <span class="currency">MXN (Pesos Mexicanos)</span>
+      </div>
     </div>
   </div>
 
   <script>
     document.getElementById('creditForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const btn = e.target.querySelector('button');
       const originalText = btn.innerText;
       btn.innerText = "Calculando...";
@@ -144,30 +256,24 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-
         const result = await response.json();
 
         if (result.error) {
           alert(result.error);
         } else {
           document.getElementById('result-box').style.display = 'block';
-          // Formato de moneda bonito
-          const formatter = new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN'
-          });
+          const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
           document.getElementById('monto-output').innerText = formatter.format(result.limite_sugerido);
         }
       } catch (error) {
         console.error(error);
-        alert("Error de conexión con el servidor");
+        alert("Error de conexión");
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
       }
-
-      btn.innerText = originalText;
-      btn.disabled = false;
     });
   </script>
-
 </body>
 
 </html>
