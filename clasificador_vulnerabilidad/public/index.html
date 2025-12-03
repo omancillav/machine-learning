@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación de Vulnerabilidad Financiera</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    h1 {
+      color: #23007B;
+    }
+
+    /* Color similar al de tu práctica anterior */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 95%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #resultado {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1.2em;
+      display: none;
+      /* Oculto por defecto */
+    }
+
+    .ESTABLE {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .EN.RIESGO {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .CRÍTICO {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Vulnerabilidad Financiera Familiar</h1>
+    <p>Evalúa el riesgo de endeudamiento de tu hogar mediante IA. Ingresa los datos para un diagnóstico instantáneo.</p>
+
+
+
+    <form id="vulnerabilidadForm">
+      <label for="ingreso">Ingreso Mensual ($):</label>
+      <input type="number" id="ingreso" name="ingreso" placeholder="Ej. 12000" required>
+
+      <label for="deuda">Deuda Total Acumulada ($):</label>
+      <input type="number" id="deuda" name="deuda" placeholder="Ej. 50000" required>
+
+      <label for="edad">Edad del Jefe de Familia:</label>
+      <input type="number" id="edad" name="edad" placeholder="Ej. 45" required>
+
+      <label for="dependientes">Número de Dependientes:</label>
+      <input type="number" id="dependientes" name="dependientes" placeholder="Ej. 3" required>
+
+      <button type="submit">Calcular Riesgo</button>
+    </form>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('vulnerabilidadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Recopilar datos
+      const data = {
+        ingreso: document.getElementById('ingreso').value,
+        deuda: document.getElementById('deuda').value,
+        edad: document.getElementById('edad').value,
+        dependientes: document.getElementById('dependientes').value
+      };
+
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.style.display = 'block';
+      resultadoDiv.className = '';
+      resultadoDiv.innerHTML = 'Procesando con TensorFlow...';
+
+      // Enviar al servidor
+      fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (result.error) {
+            resultadoDiv.innerText = result.error;
+          } else {
+            // Mostrar resultado con estilo dinámico
+            resultadoDiv.className = result.nivel; // Aplica la clase CSS según el nivel
+            resultadoDiv.innerHTML = `
+                    <strong>Nivel Detectado: ${result.nivel}</strong><br>
+                    Certeza del modelo: ${result.probabilidad}%
+                `;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          resultadoDiv.innerText = "Error al conectar con el servidor.";
+        });
+    });
+  </script>
+
+</body>
+
+</html>
