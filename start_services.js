@@ -4,7 +4,7 @@ const path = require("path");
 const services = [
   { name: "VULNERABILIDAD", dir: "clasificador_vulnerabilidad", script: "app.js", color: "\x1b[36m" }, // Cyan
   { name: "CREDITO", dir: "credito-seguro", script: "app.js", color: "\x1b[32m" }, // Green
-  { name: "ADVISOR", dir: "smart-advisor", script: "server.js", color: "\x1b[33m" }, // Yellow
+  { name: "ADVISOR", dir: "smart-advisor", script: "app.js", color: "\x1b[33m" }, // Yellow
 ];
 
 console.log("\x1b[1m\x1b[37m--- INICIANDO SUITE FINANCIERA ---\x1b[0m\n");
